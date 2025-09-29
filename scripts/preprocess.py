@@ -24,5 +24,10 @@ def preprocess_data():
     # imputation
     df['race'] = df['race'].fillna(df['race'].mode()[0])
 
+    # one-hot encoding categorical features
+    categorical_cols = df.select_dtypes(include=['object']).columns
+    df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+    
+    logging.info("Preprocessing complete.")
 if __name__ == '__main__':
     preprocess_data()
