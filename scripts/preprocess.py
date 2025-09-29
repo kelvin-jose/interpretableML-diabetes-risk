@@ -15,5 +15,8 @@ def preprocess_data():
 
     df.replace('?', np.nan, inplace=True)
 
+    # target variable
+    df['readmitted'] = (df['readmitted'] == '<30').astype(int)
+
 if __name__ == '__main__':
     preprocess_data()
