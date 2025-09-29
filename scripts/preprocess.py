@@ -21,5 +21,8 @@ def preprocess_data():
     df = df.drop(['weight', 'payer_code', 'medical_specialty'], axis=1)
     df = df.drop(['patient_nbr', 'encounter_id'], axis=1)
 
+    # imputation
+    df['race'] = df['race'].fillna(df['race'].mode()[0])
+
 if __name__ == '__main__':
     preprocess_data()
