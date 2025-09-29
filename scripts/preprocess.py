@@ -2,6 +2,7 @@ import yaml
 import logging
 import pandas as pd
 import numpy as np
+from sklearn.model_selection import train_test_split
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -29,5 +30,20 @@ def preprocess_data():
     df = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
     
     logging.info("Preprocessing complete.")
+
+    # data splitting
+    X = df.drop('readmitted', axis=1)
+    y = df['readmitted']
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, 
+        test_size=config['params']['test_size'], 
+        random_state=config['params']['random_state'],
+        stratify=y
+    )
+
+    # Combine X and y for saving
+    train_df = pd.concat([X_train, y_train], axis=1)
+    test_df = pd.concat([X_test, y_test], axis=1)
 if __name__ == '__main__':
     preprocess_data()
