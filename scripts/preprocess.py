@@ -1,3 +1,4 @@
+import os
 import yaml
 import logging
 import pandas as pd
@@ -45,5 +46,14 @@ def preprocess_data():
     # Combine X and y for saving
     train_df = pd.concat([X_train, y_train], axis=1)
     test_df = pd.concat([X_test, y_test], axis=1)
+
+    processed_dir = os.path.dirname(config['data']['processed_train_path'])
+    if not os.path.exists(processed_dir):
+        os.makedirs(processed_dir)
+    
+    train_df.to_csv(config['data']['processed_train_path'], index=False)
+    test_df.to_csv(config['data']['processed_test_path'], index=False)
+    logging.info(f"Saved processed data to {processed_dir}")
+
 if __name__ == '__main__':
     preprocess_data()
