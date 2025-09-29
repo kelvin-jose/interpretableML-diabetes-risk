@@ -18,5 +18,8 @@ def preprocess_data():
     # target variable
     df['readmitted'] = (df['readmitted'] == '<30').astype(int)
 
+    df = df.drop(['weight', 'payer_code', 'medical_specialty'], axis=1)
+    df = df.drop(['patient_nbr', 'encounter_id'], axis=1)
+
 if __name__ == '__main__':
     preprocess_data()
