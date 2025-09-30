@@ -2,6 +2,13 @@ import yaml
 import json
 import pickle
 import logging
+import collections
+if not hasattr(collections, 'Iterable'):
+    import collections.abc
+    collections.Iterable = collections.abc.Iterable
+import six
+import sys
+sys.modules['sklearn.externals.six'] = six
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -42,6 +49,12 @@ def start_interactive_session():
     constraints = {'features_to_drop': list(features_to_drop)}
     with open(constraints_path, 'w') as f:
         json.dump(constraints, f, indent=4)
+
+    logging.info(f"Constraints saved to {constraints_path}")
+    print("\n--- Session Complete ---")
+    print(f"To retrain the model with these new constraints, run:")
+    print("`python scripts/train_interpretable.py --refined`")
+
 
 if __name__ == '__main__':
     start_interactive_session()
