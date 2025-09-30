@@ -4,10 +4,15 @@ data:
   processed_test_path: 'data/processed/test.csv'
   dataset_url: 'https://archive.ics.uci.edu/ml/machine-learning-databases/00296/dataset_diabetes.zip'
 
+models:
+  interpretable_model_path: 'models/skope_rules_model.pkl'
+  constraints_path: 'models/domain_constraints.json'
+  refined_model_path: 'models/refined_skope_rules_model.pkl'
+
 params:
   test_size: 0.2
   random_state: 42
-  
+
   skope_rules:
     n_estimators: 30
     max_samples: 0.8
