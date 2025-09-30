@@ -7,3 +7,8 @@ data:
 params:
   test_size: 0.2
   random_state: 42
+  
+  skope_rules:
+    n_estimators: 30
+    max_samples: 0.8
+    max_depth_duplication: 2
