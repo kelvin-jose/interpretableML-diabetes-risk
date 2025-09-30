@@ -6,6 +6,9 @@ import collections
 if not hasattr(collections, 'Iterable'):
     import collections.abc
     collections.Iterable = collections.abc.Iterable
+import six
+import sys
+sys.modules['sklearn.externals.six'] = six
 from skrules import SkopeRules
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
