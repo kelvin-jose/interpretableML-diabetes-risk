@@ -1,4 +1,5 @@
 import yaml
+import json
 import pickle
 import logging
 
@@ -9,6 +10,7 @@ def start_interactive_session():
         config = yaml.safe_load(f)
     
     model_path = config['models']['interpretable_model_path']
+    constraints_path = config['models']['constraints_path']
 
     try:
         with open(model_path, 'rb') as f:
@@ -36,6 +38,10 @@ def start_interactive_session():
             for feat in rule_features:
                 features_to_drop.add(feat)
             print(f"   -> Added {rule_features} to drop list.\n")
+    
+    constraints = {'features_to_drop': list(features_to_drop)}
+    with open(constraints_path, 'w') as f:
+        json.dump(constraints, f, indent=4)
 
 if __name__ == '__main__':
     start_interactive_session()
