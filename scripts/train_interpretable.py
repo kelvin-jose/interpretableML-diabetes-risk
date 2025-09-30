@@ -1,4 +1,5 @@
 import yaml
+import pickle
 import logging
 import pandas as pd
 from skrules import SkopeRules
@@ -24,6 +25,21 @@ def train_model():
     logging.info("Training SkopeRules model...")
     model.fit(X_train, y_train)
     logging.info("Training complete.")
+
+    model_path = config['models']['interpretable_model_path']
+    # Save the model
+    with open(model_path, 'wb') as f:
+        pickle.dump(model, f)
+    logging.info(f"Model saved to {model_path}")
+
+    # Save the rules to a text file for inspection
+    rules_report_path = model_path.replace('.pkl', '_rules.txt')
+    with open(rules_report_path, 'w') as f:
+        f.write("Top predictive rules for readmission:\n")
+        f.write("="*40 + "\n")
+        for rule in model.rules_:
+            f.write(f"{rule}\n")
+    logging.info(f"Model rules saved to {rules_report_path}")
 
 if __name__ == '__main__':
     train_model()
