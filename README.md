@@ -10,4 +10,20 @@ The core idea is to move beyond black-box models and create a workflow where a d
 2.  **Human-in-the-Loop:** An interactive script allows a user to review these rules, provide feedback on their clinical relevance, and generate constraints to refine the model.
 3.  **Hybrid Modeling:** To improve performance without sacrificing interpretability, we train a powerful LightGBM model and then distill its knowledge into a simple, interpretable Decision Tree (a surrogate model).
 
+## Dataset
+
+This project uses the **"Diabetes 130-US hospitals for years 1999-2008 Data Set"** from the UCI Machine Learning Repository. It contains over 100,000 inpatient encounters.
+
+- **Source:** [https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008](https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008)
+
+## Repository Structure
+human_centered_readmission/
+├── README.md                 <- You are here
+├── requirements.txt          <- Project dependencies
+├── config.yml                <- Configuration file for paths and parameters
+├── data/                     <- Raw and processed data
+├── reports/                  <- Evaluation results, figures, and model rules
+└── scripts/                  <- Python scripts for the entire pipeline
+
+
 
