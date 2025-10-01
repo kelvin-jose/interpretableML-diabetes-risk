@@ -1,7 +1,9 @@
 import re
+import os
 import yaml
 import logging
 import pandas as pd
+import lightgbm as lgb
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -15,6 +17,19 @@ def train_hybrid_models():
     train_df = train_df.rename(columns = lambda x:re.sub('[^A-Za-z0-9_]+', '', x))
     X_train = train_df.drop('readmitted', axis=1)
     y_train = train_df['readmitted']
+
+    os.makedirs(os.path.dirname(config['models']['teacher_model_path']), exist_ok=True)
+
+    # --- Train the Teacher Model (LightGBM) ---
+    logging.info("Training the 'teacher' model (LightGBM)...")
+    lgbm_params = config['params']['lightgbm']
+    teacher_model = lgb.LGBMClassifier(
+        random_state=config['params']['random_state'],
+        **lgbm_params
+    )
+    
+    teacher_model.fit(X_train, y_train)
+    logging.info("Teacher model training complete.")
 
 if __name__ == '__main__':
     train_hybrid_models()
