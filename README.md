@@ -17,6 +17,7 @@ This project uses the **"Diabetes 130-US hospitals for years 1999-2008 Data Set"
 - **Source:** [https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008](https://archive.ics.uci.edu/ml/datasets/diabetes+130-us+hospitals+for+years+1999-2008)
 
 ## Repository Structure
+```
 human_centered_readmission/
 ├── README.md                 <- You are here
 ├── requirements.txt          <- Project dependencies
@@ -24,6 +25,7 @@ human_centered_readmission/
 ├── data/                     <- Raw and processed data
 ├── reports/                  <- Evaluation results, figures, and model rules
 └── scripts/                  <- Python scripts for the entire pipeline
+```
 
 ## Setup and Usage
 
