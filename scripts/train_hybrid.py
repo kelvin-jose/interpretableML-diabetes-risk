@@ -1,6 +1,7 @@
 import re
 import os
 import yaml
+import pickle
 import logging
 import pandas as pd
 import lightgbm as lgb
@@ -30,6 +31,11 @@ def train_hybrid_models():
     
     teacher_model.fit(X_train, y_train)
     logging.info("Teacher model training complete.")
+
+    teacher_model_path = config['models']['teacher_model_path']
+    with open(teacher_model_path, 'wb') as f:
+        pickle.dump(teacher_model, f)
+    logging.info(f"Teacher model saved to {teacher_model_path}")
 
 if __name__ == '__main__':
     train_hybrid_models()
