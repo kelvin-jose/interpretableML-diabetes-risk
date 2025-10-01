@@ -53,5 +53,9 @@ python scripts/train_interpretable.py --refined
 
 # Step 6: Train the hybrid model
 python scripts/train_hybrid.py
+
+# Step 7: Evaluation
+In Progress
+
 ```
 
