@@ -5,6 +5,7 @@ import pickle
 import logging
 import pandas as pd
 import lightgbm as lgb
+from sklearn.tree import DecisionTreeClassifier
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -36,6 +37,27 @@ def train_hybrid_models():
     with open(teacher_model_path, 'wb') as f:
         pickle.dump(teacher_model, f)
     logging.info(f"Teacher model saved to {teacher_model_path}")
+
+    # Train the Student Model (Surrogate Decision Tree) ---
+    logging.info("Training the 'student' surrogate model (Decision Tree)...")
+    
+    # Generate predictions from the teacher model to be used as labels for the student
+    teacher_predictions = teacher_model.predict(X_train)
+    
+    dt_params = config['params']['decision_tree']
+    student_model = DecisionTreeClassifier(
+        random_state=config['params']['random_state'],
+        **dt_params
+    )
+    
+    # The student learns to mimic the teacher's predictions
+    student_model.fit(X_train, teacher_predictions)
+    logging.info("Student surrogate model training complete.")
+
+    student_model_path = config['models']['hybrid_model_path']
+    with open(student_model_path, 'wb') as f:
+        pickle.dump(student_model, f)
+    logging.info(f"Student surrogate model saved to {student_model_path}")
 
 if __name__ == '__main__':
     train_hybrid_models()
