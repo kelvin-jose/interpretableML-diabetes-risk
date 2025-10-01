@@ -8,6 +8,8 @@ models:
   interpretable_model_path: 'models/skope_rules_model.pkl'
   constraints_path: 'models/domain_constraints.json'
   refined_model_path: 'models/refined_skope_rules_model.pkl'
+  teacher_model_path: 'models/lightgbm_teacher.pkl'
+  hybrid_model_path: 'models/hybrid_decision_tree.pkl'
 
 params:
   test_size: 0.2
@@ -17,3 +19,10 @@ params:
     n_estimators: 30
     max_samples: 0.8
     max_depth_duplication: 2
+  
+  lightgbm:
+    n_estimators: 100
+    learning_rate: 0.1
+  
+  decision_tree:
+    max_depth: 4
