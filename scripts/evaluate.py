@@ -4,6 +4,16 @@ import json
 import pickle
 import logging
 import pandas as pd
+import collections
+if not hasattr(collections, 'Iterable'):
+    import collections.abc
+    collections.Iterable = collections.abc.Iterable
+import six
+import sys
+sys.modules['sklearn.externals.six'] = six
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.tree import export_text
 from sklearn.metrics import classification_report
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -65,6 +75,60 @@ def evaluate_models():
         except Exception as e:
             logging.error(f"Could not evaluate model {name}. Error: {e}")
             results += f"An error occurred during evaluation: {e}\n\n"
+
+    report_path = 'reports/results.txt'
+    with open(report_path, 'w') as f:
+        f.write(results)
+    logging.info(f"Full evaluation report saved to {report_path}")
+    print("\n" + results)
+
+    generate_interpretability_artifacts(config)
+
+
+def generate_interpretability_artifacts(config):
+    os.makedirs('reports/figures', exist_ok=True)
+    # 1. export hybrid decision tree rules
+    try:
+        with open(config['models']['hybrid_model_path'], 'rb') as f:
+            model = pickle.load(f)
+        
+        with open(config['data']['processed_train_path'], 'rb') as f:
+            feature_names = pd.read_csv(f, nrows=0).drop('readmitted', axis=1).columns.tolist()
+
+        tree_rules = export_text(model, feature_names=feature_names)
+        rules_path = 'reports/figures/decision_tree_rules.txt'
+        with open(rules_path, 'w') as f:
+            f.write("--- Rules for Hybrid Surrogate Decision Tree ---\n\n")
+            f.write(tree_rules)
+        logging.info(f"Decision tree rules saved to {rules_path}")
+
+    except FileNotFoundError:
+        logging.warning("Hybrid model not found, skipping rule export.")
+    except Exception as e:
+        logging.error(f"Could not export tree rules. Error: {e}")
+
+    # 2. plot teacher model feature importance
+    try:
+        with open(config['models']['teacher_model_path'], 'rb') as f:
+            model = pickle.load(f)
+        
+        feature_importances = pd.Series(model.feature_importances_, index=model.feature_name_).sort_values(ascending=False)
+        
+        plt.figure(figsize=(12, 8))
+        sns.barplot(x=feature_importances.head(20), y=feature_importances.head(20).index)
+        plt.title('Top 20 Feature Importances from LightGBM (Teacher Model)')
+        plt.xlabel('Importance')
+        plt.ylabel('Feature')
+        plt.tight_layout()
+        
+        importance_path = 'reports/figures/feature_importance.png'
+        plt.savefig(importance_path)
+        logging.info(f"Feature importance plot saved to {importance_path}")
+
+    except FileNotFoundError:
+        logging.warning("Teacher model not found, skipping feature importance plot.")
+    except Exception as e:
+        logging.error(f"Could not plot feature importances. Error: {e}")
 
 
 if __name__ == '__main__':
