@@ -57,7 +57,7 @@ python scripts/train_interpretable.py --refined
 python scripts/train_hybrid.py
 
 # Step 7: Evaluation
-In Progress
+python scripts/evaluate.py
 
 ```
 
